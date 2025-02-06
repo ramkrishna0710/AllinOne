@@ -16,6 +16,7 @@ interface VideoItem {
         url: string;
       };
     };
+    channelTitle: string;
   };
 }
 
@@ -25,21 +26,17 @@ type Props = {
 
 const PointerSlidingWindow: React.FC<Props> = ({ navigation }) => {  
   
-  const allTitles = videoDataList[0].items
-  .map((item: VideoItem) => item.snippet.thumbnails)
-  .reverse();
-
-  // console.log("All Titles ", allTitles[0]);
-  
-  const newFilter = videoDataList[0].items.filter((item: VideoItem) =>
-    item.snippet.title.includes('G-')
-  ).reverse();
-
-  // console.log("New Filter ", newFilter);
-  
   const filteredVideos = videoDataList[0].items.filter((item: VideoItem) =>
     item.snippet.title.includes('2 Pointers and Sliding Window Playlist')
   ).reverse();
+
+  const filteredFirstVideos = videoDataList[0].items.filter((item: VideoItem) =>
+    item.snippet.title.includes('L1. Introduction to Sliding Window and 2 Pointers')
+  );
+
+  const firstVideos = filteredFirstVideos[0];
+
+  const finalVideo = [firstVideos, ...filteredVideos]; 
 
   const extractVideoId = (thumbnailUrl: string) => {
     const parts = thumbnailUrl.split('/vi/');
@@ -53,13 +50,14 @@ const PointerSlidingWindow: React.FC<Props> = ({ navigation }) => {
     const thumbnailUrl = thumbnails.medium.url;
     const videoId = extractVideoId(thumbnailUrl);
     const videoDes = item.snippet.description;
+    const channelName = item.snippet.channelTitle;
 
     const videoTitle = title.replace(' | 2 Pointers and Sliding Window Playlist', '');
 
     return (
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate('VideoPlayer', { title, thumbnails, videoId, videoDes, fullVideoList: filteredVideos })
+          navigation.navigate('VideoPlayer', { title, thumbnails, videoId, videoDes, fullVideoList: filteredVideos, channelName })
         }}
         style={{ marginLeft: 12 }}
       >
@@ -81,7 +79,7 @@ const PointerSlidingWindow: React.FC<Props> = ({ navigation }) => {
     <>
       <Text style={{ fontWeight: 'bold', fontSize: 16, margin: 12, color: theme.colors.white }}>2 Pointers and Sliding Window</Text>
       <FlatList
-        data={filteredVideos}
+        data={finalVideo}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         horizontal

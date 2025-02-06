@@ -16,10 +16,14 @@ type Props = {
 };
 
 const VideoPlayerScreen: React.FC<Props> = ({ route, navigation }) => {
-  const { title, thumbnails, videoId, videoDes, fullVideoList } = route.params;
+  const { title, videoId, videoDes, fullVideoList } = route.params;
 
   const [loading, setLoading] = useState(true);
   const [isTitleExpanded, setIsTitleExpanded] = useState(false);
+
+  const [currentIndex, setCurrentIndex] = useState(
+    fullVideoList.findIndex((video) => video.snippet.videoId === videoId)
+  );
 
   const toggleTitle = () => {
     setIsTitleExpanded(prevState => !prevState);
@@ -54,6 +58,18 @@ const VideoPlayerScreen: React.FC<Props> = ({ route, navigation }) => {
     return parts.length > 1 ? parts[1].split('/')[0] : '';
   };
 
+  const handleVideoEnd = () => {
+    const nextIndex = (currentIndex + 1) % fullVideoList.length;
+    const nextVideoId = extractVideoId(fullVideoList[nextIndex].snippet.thumbnails.medium.url);    
+    setCurrentIndex(nextIndex);
+    navigation.navigate('VideoPlayer', {
+      title: fullVideoList[nextIndex].snippet.title,
+      videoId: nextVideoId,
+      videoDes: fullVideoList[nextIndex].snippet.description,
+      fullVideoList,
+    });
+  }
+
   if (loading) {
     <ActivityIndicator size="large" color="#ff0000" style={{ justifyContent: 'center', alignItems: 'center' }} />
   }
@@ -64,6 +80,7 @@ const VideoPlayerScreen: React.FC<Props> = ({ route, navigation }) => {
     const extractedVideoId = extractVideoId(videoThumbnail);
     const videoTitle = item.snippet.title;
     const isPlaying = extractedVideoId === videoId;
+    const channelName = item.snippet.channelTitle;
 
     return (
       <TouchableOpacity
@@ -73,10 +90,10 @@ const VideoPlayerScreen: React.FC<Props> = ({ route, navigation }) => {
             thumbnails: item.snippet.thumbnails,
             videoId: extractedVideoId,
             videoDes: item.snippet.description,
-            fullVideoList
+            fullVideoList,
           });
         }}
-        style={{ marginLeft: 4 }}
+        style={{ marginLeft: 4, paddingVertical: 4, flexDirection: 'row' }}
       >
         <View style={{ position: 'relative' }}>
           <Image
@@ -101,27 +118,44 @@ const VideoPlayerScreen: React.FC<Props> = ({ route, navigation }) => {
             </View>
           )}
         </View>
-        <View style={{ flexDirection: 'row', width: 140, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 2 }}>
-          <Text style={{ flex: 1, fontSize: 11, fontWeight: 'bold', color: theme.colors.white }} numberOfLines={1}>
+
+        <View style={{ flex: 1, flexDirection: 'column', paddingHorizontal: 8 }}>
+          <Text
+            style={{ fontSize: 14, fontWeight: 'bold', color: theme.colors.white }}
+            numberOfLines={2}
+          >
             {videoTitle}
           </Text>
-          <Icon name="more-vertical" size={14} color={theme.colors.white} />
+
+          <Text
+            style={{ fontSize: 12, color: theme.colors.gray, marginTop: 2 }}
+          >
+            {channelName}
+          </Text>
         </View>
+
+        <Icon name="more-vertical" size={18} color={theme.colors.white} />
       </TouchableOpacity>
     );
   };
 
 
+
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
 
       <View style={styles.videoPlayerWrapper}>
         <YoutubeIframe
           videoId={videoId}
-          height={190}
+          height={216}
           play={true}
           onReady={() => setLoading(false)}
-          onChangeState={(state) => { }}
+          onChangeState={(state) => {
+            if (state === 'ended') {
+              console.log("Video ended", state);
+              handleVideoEnd();
+            }
+          }}
         />
       </View>
 
@@ -136,17 +170,16 @@ const VideoPlayerScreen: React.FC<Props> = ({ route, navigation }) => {
           </View>
         }
       </TouchableOpacity>
-      <View style={{ marginVertical: 12, marginHorizontal: 4 }}>
-        <Text style={{ fontWeight: 'bold', fontSize: 16, marginHorizontal: 4 }}>All Videos</Text>
+      <View style={{ marginVertical: 4, marginHorizontal: 4 }}>
+        <Text style={{ fontWeight: 'bold', fontSize: 16, marginHorizontal: 4, color: 'white' }}>All Videos</Text>
         <FlatList
           data={fullVideoList}
           keyExtractor={(item) => item.id}
           renderItem={renderListItem}
-          horizontal
-          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.contentContainer}
         />
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
@@ -158,6 +191,9 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.primary,
     paddingTop: 30
   },
+  contentContainer: {
+    paddingBottom: 380,
+  },
   title: {
     fontSize: 16,
     fontWeight: 'bold',
@@ -168,7 +204,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     overflow: 'hidden',
     resizeMode: 'center',
-    padding: 4
+    padding: 0
   },
   description: {
     marginTop: 16,
