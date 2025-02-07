@@ -12,6 +12,15 @@ import Algorithm from '../screens/Algorithm';
 import { TabBar } from '../components/ButtomTabBar';
 import Profile from '../screens/bottomTab/Profile';
 import Explore from '../screens/bottomTab/Explore';
+import Dsa from '../screens/dsa/Dsa';
+import Search from '../screens/bottomTab/Search';
+import Queue from '../screens/dsa/Queue';
+import StackScreen from '../screens/dsa/StackScreen';
+import LinkedList from '../screens/dsa/LinkedList';
+import GraphScreen from '../screens/dsa/Graph';
+import Dp from '../screens/dsa/Dp';
+import Aptitude from '../screens/aptitude/Aptitude';
+import Interview from '../screens/interview/Interview';
 
 export type RootStackParamList = {
     Home: undefined;
@@ -20,16 +29,23 @@ export type RootStackParamList = {
     DynamicProgramming: undefined;
     Graph: undefined;
     Algorithm: undefined;
-    VideoPlayer: { 
-        title: string; 
-        thumbnails: { medium: { url: string } }; 
-        videoId: string; 
-        videoDes: string; 
+    Dsa: undefined;
+    Aptitude: undefined;
+    Interview: undefined;
+    StackScreen: undefined;
+    Queue: undefined;
+    LinkedList: undefined;
+    GraphScreen: undefined;
+    Dp: undefined;
+    VideoPlayer: {
+        title: string;
+        thumbnails: { medium: { url: string } };
+        videoId: string;
+        videoDes: string;
         fullVideoList: Array<any>;
     };
 };
 
-// Create Stack Navigator for screens
 const Stack = createStackNavigator<RootStackParamList>();
 
 const StackNavigator = () => (
@@ -41,10 +57,17 @@ const StackNavigator = () => (
         <Stack.Screen name="DynamicProgramming" component={DynamicProgramming} />
         <Stack.Screen name="Graph" component={Graph} />
         <Stack.Screen name="Algorithm" component={Algorithm} />
+        <Stack.Screen name="Dsa" component={Dsa} />
+        <Stack.Screen name="Aptitude" component={Aptitude} />
+        <Stack.Screen name="Interview" component={Interview} />
+        <Stack.Screen name="StackScreen" component={StackScreen} />
+        <Stack.Screen name="Queue" component={Queue} />
+        <Stack.Screen name="LinkedList" component={LinkedList} />
+        <Stack.Screen name="GraphScreen" component={GraphScreen} />
+        <Stack.Screen name="Dp" component={Dp} />
     </Stack.Navigator>
 );
 
-// Create Bottom Tab Navigator
 const Tab = createBottomTabNavigator();
 
 const Navigation = () => {
@@ -52,6 +75,7 @@ const Navigation = () => {
         <NavigationContainer>
             <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
                 <Tab.Screen name="Home" component={StackNavigator} options={{ headerShown: false }} />
+                <Tab.Screen name="Search" component={Search} options={{ headerShown: false }} />
                 <Tab.Screen name="Explore" component={Explore} options={{ headerShown: false }} />
                 <Tab.Screen name="Profile" component={Profile} options={{ headerShown: false }} />
             </Tab.Navigator>

@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View, ActivityIndicator, TouchableOpacity, Linking, Image } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, ActivityIndicator, TouchableOpacity, Linking, Image, Dimensions } from 'react-native';
 import React, { useState } from 'react';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/Navigation';
@@ -60,7 +60,7 @@ const VideoPlayerScreen: React.FC<Props> = ({ route, navigation }) => {
 
   const handleVideoEnd = () => {
     const nextIndex = (currentIndex + 1) % fullVideoList.length;
-    const nextVideoId = extractVideoId(fullVideoList[nextIndex].snippet.thumbnails.medium.url);    
+    const nextVideoId = extractVideoId(fullVideoList[nextIndex].snippet.thumbnails.medium.url);
     setCurrentIndex(nextIndex);
     navigation.navigate('VideoPlayer', {
       title: fullVideoList[nextIndex].snippet.title,
@@ -139,15 +139,13 @@ const VideoPlayerScreen: React.FC<Props> = ({ route, navigation }) => {
     );
   };
 
-
-
   return (
     <View style={styles.container}>
 
-      <View style={styles.videoPlayerWrapper}>
+      <View style={[styles.videoPlayerWrapper]}>
         <YoutubeIframe
           videoId={videoId}
-          height={216}
+          height={210}
           play={true}
           onReady={() => setLoading(false)}
           onChangeState={(state) => {

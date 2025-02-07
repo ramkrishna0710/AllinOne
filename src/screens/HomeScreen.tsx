@@ -8,9 +8,7 @@ import Graph from './Graph';
 import DynamicProgramming from './DynamicProgramming';
 import BitManupulation from './BitManupulation';
 import { theme } from '../constants/theme';
-import { videoDataList } from '../utils/striver';
-import { VideoItem } from '../utils/Movies';
-import { videoDataListAbdulBari } from '../utils/abdulBari';
+import Icon from 'react-native-vector-icons/Feather';
 
 type Props = {
     navigation: any;
@@ -18,15 +16,17 @@ type Props = {
 
 const HomeScreen: React.FC<Props> = ({ navigation }) => {
     const prevOffsetY = useRef(0);
-    const visibility = useSharedValue(0); 
+    const visibility = useSharedValue(0);
 
     const handleScroll = (event: any) => {
         const currentOffsetY = event.nativeEvent.contentOffset.y;
+        const scrollingDown = currentOffsetY > prevOffsetY.current + 10;
+        const scrollingUp = currentOffsetY < prevOffsetY.current - 10;
 
-        if (currentOffsetY > prevOffsetY.current) {
-            visibility.value = withTiming(1, { duration: 400 });
-        } else if (currentOffsetY < prevOffsetY.current) {
+        if (scrollingUp && visibility.value !== 0) {
             visibility.value = withTiming(0, { duration: 400 });
+        } else if (scrollingDown && visibility.value !== 1) {
+            visibility.value = withTiming(1, { duration: 400 });
         }
 
         prevOffsetY.current = currentOffsetY;
@@ -34,19 +34,21 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
 
     const animatedStyle = useAnimatedStyle(() => ({
         opacity: visibility.value,
-        transform: [{ translateY: visibility.value === 1 ? 0 : 10 }],
+        transform: [{ translateY: withTiming(visibility.value ? 0 : 30, { duration: 400 }) }],
     }));
-      
+
     return (
         <View style={styles.container}>
             <Animated.View style={[styles.scrollTextContainer, animatedStyle]}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('Dsa')}>
                     <Text style={styles.scrollText}>DSA</Text>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <Text>|</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('Aptitude')}>
                     <Text style={styles.scrollText}>Aptitude</Text>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <Text>|</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('Interview')}>
                     <Text style={styles.scrollText}>Interview</Text>
                 </TouchableOpacity>
             </Animated.View>
@@ -77,6 +79,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
         </View>
     );
 };
+
 
 export default HomeScreen;
 
