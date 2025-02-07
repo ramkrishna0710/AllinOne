@@ -60,8 +60,8 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
                 showsVerticalScrollIndicator={false}
             >
                 <Curousel />
-                <View style={{ marginTop: 8 }}>
-                    <PointerSlidingWindow navigation={navigation} />
+                <View style={{ marginTop: 4 }}>
+                    <PointerSlidingWindow navigation={navigation} horizontal={false} />
                 </View>
                 <View style={{ marginTop: 8 }}>
                     <Algorithm navigation={navigation} />
@@ -73,7 +73,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
                     <DynamicProgramming navigation={navigation} />
                 </View>
                 <View style={{ marginTop: 8 }}>
-                    <BitManupulation />
+                    <BitManupulation navigation={navigation} />
                 </View>
             </ScrollView>
         </View>
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
         backgroundColor: theme.colors.primary,
     },
     contentContainer: {
-        paddingBottom: 80,
+        paddingBottom: 120,
     },
     scrollTextContainer: {
         position: 'absolute',

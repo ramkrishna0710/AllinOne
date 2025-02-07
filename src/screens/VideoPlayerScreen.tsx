@@ -145,7 +145,7 @@ const VideoPlayerScreen: React.FC<Props> = ({ route, navigation }) => {
       <View style={[styles.videoPlayerWrapper]}>
         <YoutubeIframe
           videoId={videoId}
-          height={210}
+          height={222}
           play={true}
           onReady={() => setLoading(false)}
           onChangeState={(state) => {
@@ -169,7 +169,7 @@ const VideoPlayerScreen: React.FC<Props> = ({ route, navigation }) => {
         }
       </TouchableOpacity>
       <View style={{ marginVertical: 4, marginHorizontal: 4 }}>
-        <Text style={{ fontWeight: 'bold', fontSize: 16, marginHorizontal: 4, color: 'white' }}>All Videos</Text>
+        <Text style={{ fontWeight: 'bold', fontSize: 18, marginVertical: 8, marginHorizontal: 4, color: 'white' }}>All Videos</Text>
         <FlatList
           data={fullVideoList}
           keyExtractor={(item) => item.id}
@@ -190,10 +190,10 @@ const styles = StyleSheet.create({
     paddingTop: 30
   },
   contentContainer: {
-    paddingBottom: 380,
+    paddingBottom: 360,
   },
   title: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
     padding: 8,
     color: theme.colors.white
