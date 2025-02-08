@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
@@ -21,6 +21,8 @@ import GraphScreen from '../screens/dsa/Graph';
 import Dp from '../screens/dsa/Dp';
 import Aptitude from '../screens/aptitude/Aptitude';
 import Interview from '../screens/interview/Interview';
+import VerifyNumber from '../screens/auth/VerifyNumber';
+import OtpScreen from '../screens/auth/OtpScreen';
 
 export type RootStackParamList = {
     Home: undefined;
@@ -44,6 +46,8 @@ export type RootStackParamList = {
         videoDes: string;
         fullVideoList: Array<any>;
     };
+    VerifyNumber: undefined;
+    OtpScreen: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -70,15 +74,30 @@ const StackNavigator = () => (
 
 const Tab = createBottomTabNavigator();
 
+const AuthStack = createStackNavigator();
+
+const AuthNavigator = () => (
+    <AuthStack.Navigator screenOptions={{ headerShown : false }}>
+        <AuthStack.Screen name='VerifyNumber' component={VerifyNumber}/>
+        <AuthStack.Screen name='OtpScreen' component={OtpScreen}/>
+    </AuthStack.Navigator>
+)
+
 const Navigation = () => {
+    const [ isAuthenticated, setIsAuthenticated ] = useState(false);
+    
     return (
         <NavigationContainer>
+            { isAuthenticated ? (
             <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
                 <Tab.Screen name="Home" component={StackNavigator} options={{ headerShown: false }} />
                 <Tab.Screen name="Search" component={Search} options={{ headerShown: false }} />
                 <Tab.Screen name="Explore" component={Explore} options={{ headerShown: false }} />
                 <Tab.Screen name="Profile" component={Profile} options={{ headerShown: false }} />
             </Tab.Navigator>
+            ) : (
+                <AuthNavigator/>
+            )}
         </NavigationContainer>
     );
 };
