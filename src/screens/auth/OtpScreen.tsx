@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, TouchableOpacity, View, Alert } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, Alert, Pressable } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { theme } from '../../constants/theme';
 import LottieView from "lottie-react-native";
@@ -15,10 +15,10 @@ const OtpScreen = ({ navigation }: Props) => {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            setVisible(false); // Hide loading modal after 2 seconds
+            setVisible(false);
         }, 2000);
-        
-        return () => clearTimeout(timer); // Cleanup timeout
+
+        return () => clearTimeout(timer);
     }, []);
 
     const handleChange = (text: string, index: number) => {
@@ -57,6 +57,7 @@ const OtpScreen = ({ navigation }: Props) => {
                         source={require('../../assets/lottie/otp.json')}
                         autoPlay
                         loop
+                        speed={0.7}
                         style={styles.lottie}
                     />
 
@@ -88,7 +89,7 @@ const OtpScreen = ({ navigation }: Props) => {
                     </TouchableOpacity>
 
                     <Text style={styles.resendText}>
-                        Didn't receive the OTP? <Text style={styles.resendLink}>Resend</Text>
+                        Didn't receive the OTP?<Pressable><Text style={styles.resendLink}>Resend</Text></Pressable>
                     </Text>
                 </>
             )}
@@ -115,6 +116,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: theme.colors.white,
         marginBottom: 10,
+        marginTop:15,
     },
     subText: {
         fontSize: 14,
@@ -169,5 +171,6 @@ const styles = StyleSheet.create({
         color: "#FF69B4",
         fontWeight: "bold",
         textDecorationLine: "underline",
+        marginLeft: 5,
     },
 });

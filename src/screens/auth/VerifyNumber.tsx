@@ -2,6 +2,7 @@ import {
   FlatList,
   Image,
   Modal,
+  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
@@ -25,6 +26,7 @@ const VerifyNumber = ({ navigation }: Props) => {
   const [selectedArea, setSelectedArea] = useState<any>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [number, setNumber] = useState<any>('')
 
   useEffect(() => {
     let isMounted = true;
@@ -86,7 +88,7 @@ const VerifyNumber = ({ navigation }: Props) => {
                 data={areas}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.code}
-                style={{ padding: 20 }}
+                style={{ padding: 10 }}
               />
             </View>
           </View>
@@ -96,7 +98,7 @@ const VerifyNumber = ({ navigation }: Props) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <StatusBar backgroundColor="transparent" translucent />
       {isLoading ? <LoadingModal visible={isLoading} /> :
         <View style={styles.lottieStyles}>
@@ -104,6 +106,7 @@ const VerifyNumber = ({ navigation }: Props) => {
             source={require('../../assets/lottie/login.json')}
             autoPlay
             loop
+            speed={0.7}
             style={{ width: 300, height: 300 }}
           />
           <>
@@ -132,6 +135,8 @@ const VerifyNumber = ({ navigation }: Props) => {
                 placeholderTextColor="rgba(255, 255, 255, 0.5)"
                 keyboardType="phone-pad"
                 style={styles.input}
+                onChangeText={(text) =>  setNumber(text)}
+                value={number}
               />
             </View>
 
@@ -150,7 +155,7 @@ const VerifyNumber = ({ navigation }: Props) => {
       }
 
       {renderAreasCodeModal()}
-    </View>
+    </ScrollView>
   );
 };
 
@@ -195,6 +200,7 @@ const styles = StyleSheet.create({
     height: 30,
     width: 30,
     marginRight: 5,
+    marginLeft: 5,
   },
   callingCodeText: {
     color: theme.colors.white,
@@ -220,20 +226,21 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   bottomContainer: {
-    position: 'absolute',
-    bottom: 30,
+    marginTop: 50,
     alignItems: 'center',
-    width: '100%',
+    width: '90%',
   },
   termsText: {
     color: theme.colors.white,
     textAlign: 'center',
-    fontSize: 13,
+    fontSize: 12,
+    opacity: 0.7,
   },
   termsLink: {
     color: theme.colors.white,
     textDecorationLine: 'underline',
-    fontSize: 13,
+    fontSize: 12,
+    opacity: 0.7,
   },
   modalContainer: {
     flex: 1,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
@@ -23,6 +23,7 @@ import Aptitude from '../screens/aptitude/Aptitude';
 import Interview from '../screens/interview/Interview';
 import VerifyNumber from '../screens/auth/VerifyNumber';
 import OtpScreen from '../screens/auth/OtpScreen';
+import auth from '@react-native-firebase/auth'
 
 export type RootStackParamList = {
     Home: undefined;
@@ -77,26 +78,34 @@ const Tab = createBottomTabNavigator();
 const AuthStack = createStackNavigator();
 
 const AuthNavigator = () => (
-    <AuthStack.Navigator screenOptions={{ headerShown : false }}>
-        <AuthStack.Screen name='VerifyNumber' component={VerifyNumber}/>
-        <AuthStack.Screen name='OtpScreen' component={OtpScreen}/>
+    <AuthStack.Navigator screenOptions={{ headerShown: false }}>
+        <AuthStack.Screen name='VerifyNumber' component={VerifyNumber} />
+        <AuthStack.Screen name='OtpScreen' component={OtpScreen} />
     </AuthStack.Navigator>
 )
 
 const Navigation = () => {
-    const [ isAuthenticated, setIsAuthenticated ] = useState(false);
-    
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [user, setUser] = useState();
+
+    // const onAuthStateSave = (user: any) => setUser(user);
+
+    // useEffect(() => {
+    //     const subscriber = auth().onAuthStateChanged(onAuthStateSave);
+    //     return subscriber;
+    // })
+
     return (
         <NavigationContainer>
-            { isAuthenticated ? (
-            <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
-                <Tab.Screen name="Home" component={StackNavigator} options={{ headerShown: false }} />
-                <Tab.Screen name="Search" component={Search} options={{ headerShown: false }} />
-                <Tab.Screen name="Explore" component={Explore} options={{ headerShown: false }} />
-                <Tab.Screen name="Profile" component={Profile} options={{ headerShown: false }} />
-            </Tab.Navigator>
+            {isAuthenticated ? (
+                <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
+                    <Tab.Screen name="Home" component={StackNavigator} options={{ headerShown: false }} />
+                    <Tab.Screen name="Search" component={Search} options={{ headerShown: false }} />
+                    <Tab.Screen name="Explore" component={Explore} options={{ headerShown: false }} />
+                    <Tab.Screen name="Profile" component={Profile} options={{ headerShown: false }} />
+                </Tab.Navigator>
             ) : (
-                <AuthNavigator/>
+                <AuthNavigator />
             )}
         </NavigationContainer>
     );
