@@ -10,8 +10,9 @@ type Props = {
 
 const OtpScreen = ({ navigation }: Props) => {
     const [visible, setVisible] = useState(true);
-    const [otp, setOtp] = useState(["", "", "", ""]);
+    const [otp, setOtp] = useState(new Array(6).fill(""));
     const inputRefs = useRef<Array<TextInput | null>>([]);
+    const [resendDisabled, setResendDisabled] = useState(false);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -27,7 +28,7 @@ const OtpScreen = ({ navigation }: Props) => {
         newOtp[index] = text;
         setOtp(newOtp);
 
-        if (text && index < 3) {
+        if (text && index < 5) {
             inputRefs.current[index + 1]?.focus();
         }
     };
@@ -40,12 +41,18 @@ const OtpScreen = ({ navigation }: Props) => {
 
     const handleVerify = () => {
         const enteredOtp = otp.join("");
-        if (enteredOtp.length < 4) {
-            Alert.alert("Invalid OTP", "Please enter a 4-digit OTP.");
+        if (enteredOtp.length < 6) {
+            Alert.alert("Invalid OTP", "Please enter a 6-digit OTP.");
             return;
         }
         Alert.alert("Success", "OTP Verified!");
         navigation.navigate('Home');
+    };
+
+    const handleResendOtp = () => {
+        setResendDisabled(true);
+        Alert.alert("OTP Resent", "A new OTP has been sent to your phone.");
+        setTimeout(() => setResendDisabled(false), 30000); // Disable resend for 30 seconds
     };
 
     return (
@@ -62,7 +69,7 @@ const OtpScreen = ({ navigation }: Props) => {
                     />
 
                     <Text style={styles.header}>Enter OTP</Text>
-                    <Text style={styles.subText}>We have sent a 4-digit code to your phone</Text>
+                    <Text style={styles.subText}>We have sent a 6-digit code to your phone</Text>
 
                     <View style={styles.otpContainer}>
                         {otp.map((digit, index) => (
@@ -88,9 +95,12 @@ const OtpScreen = ({ navigation }: Props) => {
                         <Text style={styles.buttonText}>VERIFY</Text>
                     </TouchableOpacity>
 
-                    <Text style={styles.resendText}>
-                        Didn't receive the OTP?<Pressable><Text style={styles.resendLink}>Resend</Text></Pressable>
-                    </Text>
+                    <View style={styles.resendContainer}>
+                        <Text style={styles.resendText}>Didn't receive the OTP?</Text>
+                        <Pressable onPress={handleResendOtp} disabled={resendDisabled}>
+                            <Text style={[styles.resendLink, resendDisabled && { opacity: 0.5 }]}>Resend OTP</Text>
+                        </Pressable>
+                    </View>
                 </>
             )}
         </View>
@@ -116,7 +126,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: theme.colors.white,
         marginBottom: 10,
-        marginTop:15,
+        marginTop: 15,
     },
     subText: {
         fontSize: 14,
@@ -127,11 +137,11 @@ const styles = StyleSheet.create({
     otpContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
-        width: "80%",
+        width: "85%",
         marginBottom: 30,
     },
     otpInput: {
-        width: 50,
+        width: 45,
         height: 50,
         borderRadius: 10,
         backgroundColor: "#FFF",
@@ -139,15 +149,15 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: "bold",
         color: theme.colors.black,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-        elevation: 5,
+        shadowColor: theme.colors.white,
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+        elevation: 3
     },
     button: {
         backgroundColor: "#FF69B4",
-        width: "80%",
+        width: "85%",
         paddingVertical: 12,
         borderRadius: 10,
         alignItems: "center",
@@ -162,15 +172,19 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         fontSize: 18,
     },
+    resendContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 20,
+    },
     resendText: {
         color: "rgba(255, 255, 255, 0.7)",
-        marginTop: 20,
         fontSize: 14,
+        marginRight: 5,
     },
     resendLink: {
         color: "#FF69B4",
         fontWeight: "bold",
         textDecorationLine: "underline",
-        marginLeft: 5,
     },
 });
