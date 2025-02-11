@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
   lottieStyles: {
     alignItems: 'center',
     flex: 1,
-    marginTop: 80,
+    marginTop: 180,
   },
   textHeader: {
     color: theme.colors.white,
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.white,
     borderWidth: 1,
     borderRadius: 15,
-    marginTop: 24,
+    marginTop: 34,
     alignItems: 'center',
     padding: 5,
   },
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   bottomContainer: {
-    marginTop: 50,
+    marginTop: 150,
     alignItems: 'center',
     width: '90%',
   },
