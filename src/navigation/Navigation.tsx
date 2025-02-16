@@ -85,7 +85,7 @@ const AuthNavigator = () => (
 )
 
 const Navigation = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(true);
     const [user, setUser] = useState();
 
     // const onAuthStateSave = (user: any) => setUser(user);
